@@ -11,6 +11,7 @@ import App from './App';
 
 import { WagmiConfig, createClient, chain, configureChains } from 'wagmi';
 import { ConnectKitProvider, getDefaultClient } from 'connectkitx';
+import { MagicConnectConnector } from './MagicConnectConnector';
 
 const { chains, provider } = configureChains(
   [chain.goerli],
