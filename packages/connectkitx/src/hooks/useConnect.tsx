@@ -1,7 +1,11 @@
 import { useConnect as wagmiUseConnect, useNetwork } from 'wagmi';
 import { useConnectKitContext } from '../context/useConnectKitContext';
 
-export function useConnect() {
+type ConnectResult = ReturnType<typeof wagmiUseConnect>;
+
+export type UseConnectReturnValue = Pick<ConnectResult, 'connectAsync' | 'connectors'>
+
+export function useConnect(): UseConnectReturnValue {
   const context = useConnectKitContext();
   const { chains } = useNetwork();
   const { connectAsync, connectors } = wagmiUseConnect({
