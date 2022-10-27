@@ -18,8 +18,6 @@ const ConnectUsing: React.FC<{ connectorId: string }> = ({ connectorId }) => {
 
   const connector = supportedConnectors.filter((c) => c.id === id)[0];
 
-  console.log({ supportedConnectors });
-
   const hasExtensionInstalled =
     connector.extensionIsInstalled && connector.extensionIsInstalled();
 
