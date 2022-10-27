@@ -19,11 +19,10 @@ export const magicConnectConnector: SupportedConnector = {
         <Logos.OtherWallets />
       </div>
     ),
-    transparent: <Logos.WalletConnect background={false} />,
-    connectorButton: <Logos.OtherWallets />,
-    qrCode: <Logos.WalletConnect background={true} />,
+    transparent: <Logos.MagicLink background={false} />,
+    connectorButton: <Logos.MagicLink />,
   },
-  logoBackground: 'var(--ck-brand-magicConnect)',
+  logoBackground: 'var(--ck-brand-magicLink)',
   scannable: false,
   extensionIsInstalled: () => true
 }
