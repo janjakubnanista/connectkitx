@@ -18,7 +18,7 @@ importers:
       rollup-plugin-typescript2: ^0.34.0
       rollup-plugin-visualizer: ^5.5.4
       tslib: ^1.9.3
-      wagmi: ^0.6.0
+      wagmi: ^0.6.8
     dependencies:
       '@changesets/cli': 2.25.0
     devDependencies:
@@ -52,7 +52,7 @@ importers:
       react-dom: ^18.0.0
       react-scripts: 5.0.1
       typescript: 4.8.3
-      wagmi: ^0.6.0
+      wagmi: ^0.6.8
       web-vitals: ^2.1.4
     dependencies:
       '@testing-library/jest-dom': 5.16.5
@@ -84,7 +84,7 @@ importers:
       react: ^18.0.0
       react-dom: ^18.0.0
       typescript: 4.8.3
-      wagmi: ^0.6.0
+      wagmi: ^0.6.8
     dependencies:
       connectkitx: link:../../packages/connectkitx
       ethers: 5.7.2
@@ -113,7 +113,7 @@ importers:
       react: ^18.0.0
       react-dom: ^18.0.0
       typescript: 4.8.3
-      wagmi: ^0.6.0
+      wagmi: ^0.6.8
     dependencies:
       connectkitx: link:../../packages/connectkitx
       ethers: 5.7.2
@@ -140,7 +140,7 @@ importers:
       react-dom: ^18.2.0
       typescript: 4.8.3
       vite: ^3.1.0
-      wagmi: ^0.6.0
+      wagmi: ^0.6.8
     dependencies:
       connectkitx: link:../../packages/connectkitx
       ethers: 5.7.2
@@ -163,6 +163,7 @@ importers:
       '@types/styled-components': ^5.1.25
       buffer: ^6.0.3
       detect-browser: ^5.3.0
+      ethers: ^5.6.5
       framer-motion: ^6.3.11
       qrcode: ^1.5.0
       react-transition-state: ^1.1.4
@@ -183,6 +184,7 @@ importers:
       '@types/react': 18.0.23
       '@types/react-dom': 18.0.7
       '@types/styled-components': 5.1.26
+      ethers: 5.7.2
       typescript: 4.8.3
 
   packages/cra-template:
@@ -3403,7 +3405,7 @@ packages:
   /@types/bn.js/4.11.6:
     resolution: {integrity: sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==}
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 18.11.7
 
   /@types/bn.js/5.1.1:
     resolution: {integrity: sha512-qNrYbZqMx0uJAfKnKclPh+dTwK33KfLHYqtyODwd5HnXOjnkhc4qgn3BrK6RWyGZm5+sIFE7Q7Vz6QQtJB7w7g==}
@@ -3434,7 +3436,7 @@ packages:
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 18.11.7
 
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
@@ -3676,7 +3678,7 @@ packages:
   /@types/ws/7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
     dependencies:
-      '@types/node': 12.20.55
+      '@types/node': 18.11.7
 
   /@types/ws/8.5.3:
     resolution: {integrity: sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==}
