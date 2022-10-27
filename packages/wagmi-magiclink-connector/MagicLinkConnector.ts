@@ -1,33 +1,28 @@
 import { providers } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
-import { chain, Chain, Connector, UserRejectedRequestError } from 'wagmi';
+import { chain, Connector, UserRejectedRequestError } from 'wagmi';
 import { Magic, RPCError } from 'magic-sdk';
 import { ConnectExtension } from '@magic-ext/connect';
 
-interface MagicConnectConnectorOptions {
+interface MagicLinkConnectorOptions {
   apiKey: string;
   rpcUrl?: string;
   testMode?: boolean;
   preload?: boolean;
 }
 
-type MagicConnectSigner = providers.JsonRpcSigner;
+type MagicLinkSigner = providers.JsonRpcSigner;
 
-type MagicConnectProvider = providers.Web3Provider;
+type MagicLinkProvider = providers.Web3Provider;
 
-interface MagicConnectConnectorConstructorParams {
-  chains?: Chain[];
-  options: MagicConnectConnectorOptions;
-}
-
-export class MagicConnectConnector extends Connector<
-  MagicConnectProvider,
-  MagicConnectConnectorOptions,
-  MagicConnectSigner
+export class MagicLinkConnector extends Connector<
+  MagicLinkProvider,
+  MagicLinkConnectorOptions,
+  MagicLinkSigner
 > {
   readonly id = 'magicConnect';
 
-  readonly name = 'MagicConnect';
+  readonly name = 'MagicLink';
 
   readonly ready = true;
 
@@ -36,7 +31,7 @@ export class MagicConnectConnector extends Connector<
   // FIXME The extensions should be passed in here
   private magic?: Magic<ConnectExtension[]>;
 
-  // constructor({ chains, options }: MagicConnectConnectorConstructorParams) {
+  // constructor({ chains, options }: MagicLinkConnectorConstructorParams) {
   //   super({ chains, options })
   // };
 
@@ -108,11 +103,6 @@ export class MagicConnectConnector extends Connector<
     ) {
       this.detachListeners();
 
-      // FIXME
-      const rpcUrl =
-        this.options.rpcUrl ??
-        this.chains.find((chain) => chain.id === chainId)?.rpcUrls.default;
-
       const magic = (this.magic = new Magic(this.options.apiKey, {
         network:
           chainId == null
@@ -123,7 +113,7 @@ export class MagicConnectConnector extends Connector<
             ? 'goerli'
             : {
                 chainId,
-                rpcUrl: rpcUrl!,
+                rpcUrl: this.options.rpcUrl ?? '',
               },
         extensions: [new ConnectExtension()],
         testMode: this.options.testMode,

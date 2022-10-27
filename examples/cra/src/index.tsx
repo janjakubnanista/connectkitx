@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-import { publicProvider } from 'wagmi/providers/public';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 import './index.css';
@@ -11,7 +10,9 @@ import App from './App';
 
 import { WagmiConfig, createClient, chain, configureChains } from 'wagmi';
 import { ConnectKitProvider, getDefaultClient } from 'connectkitx';
-import { MagicConnectConnector } from './MagicConnectConnector';
+import { MagicAuthConnector, MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
+import { ConnectExtension } from '@magic-ext/connect';
+
 
 const { chains, provider } = configureChains(
   [chain.goerli],
@@ -24,6 +25,30 @@ const client = createClient({
   connectors: [
     new MetaMaskConnector({ chains }),
     new WalletConnectConnector({ chains, options: {} }),
+    // new MagicAuthConnector({
+    //   chains,
+    //   options: {
+    //     apiKey: 'pk_live_7CDF955F06C7E03C',
+    //     oauthOptions: {
+    //       providers: ['google', 'twitter']
+    //     },
+    //     magicSdkConfiguration: {
+    //       extensions: [new ConnectExtension() as any],
+    //     }
+    //   },
+    // }),
+    new MagicConnectConnector({
+      chains,
+      options: {
+        apiKey: 'pk_live_7CDF955F06C7E03C',
+        // oauthOptions: {
+        //   providers: ['google', 'twitter']
+        // },
+        magicSdkConfiguration: {
+          extensions: [new ConnectExtension() as any],
+        }
+      },
+    }),
   ],
 });
 
