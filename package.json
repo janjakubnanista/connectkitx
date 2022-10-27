@@ -16,7 +16,8 @@
     "vite": "pnpm --filter vite",
     "build": "pnpm connectkit run build",
     "build:ci": "pnpm -r run build",
-    "lint:ci": "pnpm -r run lint"
+    "lint:ci": "pnpm -r run lint",
+    "publish": "pnpm core publish"
   },
   "devDependencies": {
     "@magic-ext/connect": "^3.0.0",
