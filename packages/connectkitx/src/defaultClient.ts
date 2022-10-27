@@ -1,5 +1,4 @@
 import { Chain, Connector, chain, configureChains } from 'wagmi';
-import { Provider } from '@wagmi/core';
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
@@ -13,6 +12,8 @@ import { publicProvider } from 'wagmi/providers/public';
 
 let globalAppName: string;
 export const getAppName = () => globalAppName;
+
+type Provider = any;
 
 const defaultChains = [
   chain.mainnet,
