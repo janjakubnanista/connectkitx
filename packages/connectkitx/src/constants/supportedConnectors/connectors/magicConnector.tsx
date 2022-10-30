@@ -6,7 +6,7 @@ export const magicConnector: SupportedConnector = {
   name: 'MagicLink',
   shortName: 'Magic',
   logos: {
-    default: <Logos.WalletConnect />,
+    default: <Logos.MagicLink />,
     mobile: (
       <div
         style={{
@@ -16,7 +16,7 @@ export const magicConnector: SupportedConnector = {
           boxShadow: 'inset 0 0 0 1px rgba(0, 0, 0, 0.02)',
         }}
       >
-        <Logos.OtherWallets />
+        <Logos.MagicLink />
       </div>
     ),
     transparent: <Logos.MagicLink background={false} />,
