@@ -1,13 +1,12 @@
 import { providers } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
-import { chain, Chain, Connector, UserRejectedRequestError } from 'wagmi';
-import { Magic, RPCError } from 'magic-sdk';
+import { Chain, chain, Connector, UserRejectedRequestError } from 'wagmi';
+import { EthNetworkConfiguration, Magic, RPCError } from 'magic-sdk';
 import { ConnectExtension } from '@magic-ext/connect';
 
 interface MagicConnectConnectorOptions {
   apiKey: string;
-  rpcUrl?: string;
-  testMode?: boolean;
+  chain: Chain;
   preload?: boolean;
 }
 
@@ -15,17 +14,21 @@ type MagicConnectSigner = providers.JsonRpcSigner;
 
 type MagicConnectProvider = providers.Web3Provider;
 
-interface MagicConnectConnectorConstructorParams {
-  chains?: Chain[];
-  options: MagicConnectConnectorOptions;
-}
-
 export class MagicConnectConnector extends Connector<
   MagicConnectProvider,
   MagicConnectConnectorOptions,
   MagicConnectSigner
 > {
-  readonly id = 'magicConnect';
+  private readonly magicNetworksByChainId: Map<
+    Chain['id'],
+    EthNetworkConfiguration
+  > = new Map([
+    [chain.mainnet.id, 'mainnet'],
+    [chain.goerli.id, 'goerli'],
+  ]);
+
+  // This needs to match the id in connectkitx
+  readonly id = 'magic';
 
   readonly name = 'MagicConnect';
 
@@ -35,10 +38,6 @@ export class MagicConnectConnector extends Connector<
 
   // FIXME The extensions should be passed in here
   private magic?: Magic<ConnectExtension[]>;
-
-  // constructor({ chains, options }: MagicConnectConnectorConstructorParams) {
-  //   super({ chains, options })
-  // };
 
   async connect({ chainId }: { chainId?: number } = {}) {
     try {
@@ -55,6 +54,8 @@ export class MagicConnectConnector extends Connector<
       const account = await this.getAccount();
       const id = await this.getChainId();
       const unsupported = this.isChainUnsupported(id);
+
+      this.setConnectedTime(Date.now());
 
       return {
         account,
@@ -75,20 +76,22 @@ export class MagicConnectConnector extends Connector<
   async disconnect() {
     await this.magic?.connect.disconnect();
 
+    this.setConnectedTime(undefined);
+
     this.detachListeners();
     this.emit('disconnect');
 
     // FIXME What now
   }
 
-  async getAccount(): Promise<string> {
+  async getAccount(): Promise<`0x${string}`> {
     const provider = await this.getProvider();
     const accounts = await provider.listAccounts();
 
     // return checksum address
     //
     // FIXME It can actually be undefined
-    return getAddress(accounts[0] as string);
+    return getAddress(accounts[0]) as `0x${string}`;
   }
 
   async getChainId(): Promise<number> {
@@ -98,35 +101,20 @@ export class MagicConnectConnector extends Connector<
   }
 
   async getProvider({
-    chainId,
+    chainId = this.options.chain.id,
     create,
   }: { chainId?: number; create?: boolean } = {}) {
-    if (
-      !this.provider ||
-      create ||
-      (chainId != null && this.provider.network.chainId !== chainId)
-    ) {
+    if (!this.provider || create || this.provider.network.chainId !== chainId) {
       this.detachListeners();
 
-      // FIXME
-      const rpcUrl =
-        this.options.rpcUrl ??
-        this.chains.find((chain) => chain.id === chainId)?.rpcUrls.default;
+      const network = this.magicNetworksByChainId.get(chainId);
+      if (!network) {
+        throw new Error(`Invalid chainId: ${chainId}`);
+      }
 
       const magic = (this.magic = new Magic(this.options.apiKey, {
-        network:
-          chainId == null
-            ? undefined
-            : chainId === chain.mainnet.id
-            ? 'mainnet'
-            : chainId === chain.goerli.id
-            ? 'goerli'
-            : {
-                chainId,
-                rpcUrl: rpcUrl!,
-              },
+        network,
         extensions: [new ConnectExtension()],
-        testMode: this.options.testMode,
       }));
 
       if (this.options.preload) await magic.preload();
@@ -148,9 +136,10 @@ export class MagicConnectConnector extends Connector<
   }
 
   async isAuthorized() {
-    if (this.magic == null) return false;
+    const connectedTime = this.getConnectedTime();
+    if (connectedTime == null) return false;
 
-    return await this.magic.user.isLoggedIn();
+    return Date.now() - connectedTime < CONNECT_DURATION;
   }
 
   async switchChain(chainId: number) {
@@ -171,6 +160,10 @@ export class MagicConnectConnector extends Connector<
     this.provider?.removeListener('disconnect', this.onDisconnect);
   }
 
+  protected isChainUnsupported(chainId: number): boolean {
+    return this.magicNetworksByChainId.get(chainId) == null;
+  }
+
   protected onAccountsChanged = (accounts: string[]) => {
     if (accounts.length === 0) this.emit('disconnect');
     else this.emit('change', { account: getAddress(accounts[0] as string) });
@@ -186,11 +179,38 @@ export class MagicConnectConnector extends Connector<
   };
 
   protected onDisconnect = () => {
+    this.setConnectedTime(undefined);
     this.emit('disconnect');
   };
+
+  private getConnectedTime(): number | undefined {
+    try {
+      const connectedTimeAsString =
+        window.localStorage.getItem(CONNECTED_TIME_KEY);
+      if (connectedTimeAsString == null) return undefined;
+
+      const connectedTime = parseInt(connectedTimeAsString);
+      if (isNaN(connectedTime)) return undefined;
+
+      return connectedTime;
+    } catch {}
+  }
+
+  private setConnectedTime(value: number | undefined) {
+    try {
+      if (value == null) {
+        window.localStorage.removeItem(CONNECTED_TIME_KEY);
+      } else {
+        window.localStorage.setItem(CONNECTED_TIME_KEY, value.toString());
+      }
+    } catch {}
+  }
 }
 
 const normalizeChainId = (chainId: string | number | bigint): number =>
   typeof chainId === 'string' ? parseInt(chainId) : Number(chainId);
 
-const USER_REJECTED_MESSAGE_PATTERN = /user rejected the action/i;
+const USER_REJECTED_MESSAGE_PATTERN = /user rejected/i;
+
+const CONNECTED_TIME_KEY = 'xyz.9999in1.connectedTime';
+const CONNECT_DURATION = 7 * 86400 * 1000;
