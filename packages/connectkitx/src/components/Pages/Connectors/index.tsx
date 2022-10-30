@@ -32,7 +32,6 @@ import {
 import { isMobile, isAndroid } from '../../../utils';
 
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
-//import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 
@@ -51,36 +50,20 @@ const Wallets: React.FC = () => {
   const { connectAsync, connectors } = useConnect();
 
   const openDefaultConnect = async (id: string) => {
-    const c = connectors.filter((c) => c.id === id)[0];
+    const c = connectors.find((c) => c.id === id);
     let connector = null;
     switch (c.id) {
       case 'walletConnect':
         context.setRoute(routes.MOBILECONNECTORS);
         break;
-      /*
-        connector = new WalletConnectConnector({
-          chains: c.chains,
-          options: { ...c.options, qrcode: true },
-        });
-        break;
-        */
       case 'metaMask':
         connector = new WalletConnectConnector({
           chains: c.chains,
           options: { ...c.options, qrcode: false },
         });
         break;
-      case 'coinbaseWallet':
-        connector = new CoinbaseWalletConnector({
-          chains: c.chains,
-          options: c.options,
-        });
-        break;
-      case 'injected':
-        connector = new InjectedConnector({
-          chains: c.chains,
-          options: c.options,
-        });
+      default:
+        connector = c;
         break;
     }
 
