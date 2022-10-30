@@ -10,8 +10,8 @@ import App from './App';
 
 import { WagmiConfig, createClient, chain, configureChains } from 'wagmi';
 import { ConnectKitProvider, getDefaultClient } from 'connectkitx';
-import { MagicAuthConnector, MagicConnectConnector } from '@everipedia/wagmi-magic-connector';
 import { ConnectExtension } from '@magic-ext/connect';
+import { MagicConnectConnector } from './MagicConnectConnector';
 
 
 const { chains, provider } = configureChains(
@@ -41,12 +41,7 @@ const client = createClient({
       chains,
       options: {
         apiKey: 'pk_live_7CDF955F06C7E03C',
-        // oauthOptions: {
-        //   providers: ['google', 'twitter']
-        // },
-        magicSdkConfiguration: {
-          extensions: [new ConnectExtension() as any],
-        }
+        chain: chain.goerli
       },
     }),
   ],
