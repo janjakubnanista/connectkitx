@@ -1,6 +1,6 @@
 {
   "name": "connectkitx",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "build/index.js",
   "description": "ConnectKitX: ConnectKit with extras",
   "module": "build/index.es.js",
