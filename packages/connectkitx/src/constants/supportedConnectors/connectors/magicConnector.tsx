@@ -1,10 +1,9 @@
-import { SupportedConnector } from "../types"
 import Logos from '../../../assets/logos';
+import { SupportedConnector } from "../types";
 
 export const magicConnector: SupportedConnector = {
   id: 'magic',
-  name: 'MagicLink',
-  shortName: 'Magic',
+  name: 'Email & socials',
   logos: {
     default: <Logos.MagicLink />,
     mobile: (
